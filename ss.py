@@ -56,8 +56,3 @@ if uploaded_file is not None:
 
 else:
     st.write("이미지를 업로드하세요!")
-
-    st.bar_chart(list(confidence_scores.values()), height=300)
-
-else:
-    st.write("이미지를 업로드하세요!")
