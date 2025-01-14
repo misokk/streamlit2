@@ -3,4 +3,5 @@ torch
 torchvision
 Pillow
 numpy
-gdown
+requests
+os
