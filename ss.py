@@ -12,8 +12,10 @@ uploaded_file = st.file_uploader("이미지를 업로드하세요!", type=["jpg"
 
 @st.cache
 def load_model():
-    file_id = '1G15KctjoC7rA2udqrBZs1DBBhf4QWDzU'  
-    gdown.download(f'https://drive.google.com/uc?id={file_id}', 'dogcat.pth', quiet=False)
+    file_id = "1G15KctjoC7rA2udqrBZs1DBBhf4QWDzU"
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    gdown.download(url, "dogcat.pth", quiet=False)
 
     model = models.resnet50(pretrained=False)
     num_features = model.fc.in_features
