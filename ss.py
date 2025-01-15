@@ -13,12 +13,12 @@ uploaded_file = st.file_uploader("이미지를 업로드하세요!", type=["jpg"
 @st.cache
 def load_model():
     file_id = '1G15KctjoC7rA2udqrBZs1DBBhf4QWDzU'  
-    gdown.download(f'https://drive.google.com/uc?id={file_id}', 'dogcat.pth', quiet=False)
+    gdown.download(f'1G15KctjoC7rA2udqrBZs1DBBhf4QWDzU={file_id}', 'dogcat_model.pth', quiet=False)
 
     model = models.resnet50(pretrained=False)
     num_features = model.fc.in_features
-    model.fc = torch.nn.Linear(num_features, 2)  # 이진 분류
-    model.load_state_dict(torch.load("dogcat.pth", map_location=torch.device("cpu")))
+    model.fc = torch.nn.Linear(num_features, 2)  
+    model.load_state_dict(torch.load("dogcat_model.pth", map_location=torch.device("cpu")))
     model.eval()
     return model
 
