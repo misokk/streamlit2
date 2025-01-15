@@ -9,23 +9,27 @@ st.write("이미지를 업로드하면 강아지인지 고양이인지 알려드
 
 uploaded_file = st.file_uploader("이미지를 업로드하세요!", type=["jpg", "jpeg", "png"])
 
+# 캐시 함수 수정 (st.cache_resource 사용)
 @st.cache_resource
 def load_model():
-    file_id = "1Nmd2wWnYezeqMZ-AOH3xhI4lTUnkXZZH" 
+    file_id = "1Nmd2wWnYezeqMZ-AOH3xhI4lTUnkXZZH"  # Google Drive 파일 ID
     url = f"https://drive.google.com/uc?id={file_id}"
     output = "dogcat_model.pth"
-
+    
+    # gdown으로 파일 다운로드
     gdown.download(url, output, quiet=False)
     
+    # 모델 정의 및 가중치 로드
     model = models.resnet50(pretrained=False)
     num_features = model.fc.in_features
-    model.fc = torch.nn.Linear(num_features, 2) 
+    model.fc = torch.nn.Linear(num_features, 2)  # 이진 분류
     model.load_state_dict(torch.load(output, map_location=torch.device("cpu")))
     model.eval()
     return model
 
 model = load_model()
 
+# 이미지 전처리 함수
 def preprocess_image(image):
     transform = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -34,6 +38,7 @@ def preprocess_image(image):
     ])
     return transform(image).unsqueeze(0)
 
+# 업로드된 파일 처리
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     st.image(image, caption="업로드된 이미지", use_column_width=True)
@@ -55,10 +60,5 @@ if uploaded_file is not None:
         st.write(f"{label}: {score:.2f}%")
     
     st.bar_chart(list(confidence_scores.values()), height=300)
-else:
-    st.write("이미지를 업로드하세요!")
-
-    st.bar_chart(list(confidence_scores.values()), height=300)
-
 else:
     st.write("이미지를 업로드하세요!")
